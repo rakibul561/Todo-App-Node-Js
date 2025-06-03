@@ -2,8 +2,15 @@ const http = require("http");
 
 
 const server = http.createServer((req, res) =>{
-    console.log({req, res});
-    res.end("Well come to todo App")
+    // res.end("Well come to todo App")
+
+    if(req.url === "/todos" && req.method === "GET"){
+        res.send("All Todos")
+    } else if (req.url === "/todos/create-todo" && req.method === "POST") {
+        res.send("Todo created") 
+    } else{
+        res.send("Route Not found !")
+    }
 })
 
 
