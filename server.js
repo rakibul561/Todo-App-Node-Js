@@ -1,10 +1,18 @@
 const http = require("http");
 const fs = require("fs");
 const path = require("path"); 
+const { title } = require("process");
   
 const filepath = path.join(__dirname, "./db/todo.json");
 
 const server = http.createServer((req, res) =>{
+
+    const url = new URL(req.url, `http://${req.headers.host}`);
+const pathName = url.pathname;
+// console.log(pathName);
+
+    console.log(url.pathname);
+    
     // res.end("Well come to todo App")
 
     if(req.url === "/todos" && req.method === "GET"){
@@ -17,7 +25,7 @@ const server = http.createServer((req, res) =>{
         res.end(data);
 
 
-    } else if (req.url === "/todos/create-todo" && req.method === "POST") {
+    } else if (pathName === "/todos/create-todo" && req.method === "POST") {
      
         let data = ""
 
@@ -44,7 +52,27 @@ const server = http.createServer((req, res) =>{
         })
             
 
-    } else{
+    } 
+    else 
+    if(pathName ==="/todo" && req.method === "GET"){
+        const title = url.searchParams.get("title")
+        console.log(title);
+         const data = fs.readFileSync(filepath, {encoding: 'utf-8'})
+        const parseData = JSON.parse(data)
+        const todo = parseData.find((todo)=> todo.title === title)
+        const sitringifyTodo = JSON.stringify(todo)
+     
+        res.writeHead(201, {
+            "content-type" : "application/json",
+           
+        })
+        res.end(sitringifyTodo);
+
+
+    }
+    
+    
+    else{
         res.end("Route Not found !")
     }
 })
