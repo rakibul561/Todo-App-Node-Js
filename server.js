@@ -70,8 +70,63 @@ const pathName = url.pathname;
 
 
     }
+    else if (pathName === "/todos/update-todo" && req.method === "PATCH") {
+        const title = url.searchParams.get("title")
+        
+        let data = ""
+
+        req.on("data", (chank)=>{
+            data = data + chank ;
+        })
+
+        req.on("end", ()=>{
+            console.log(data);
+            
+            const { body} = JSON.parse(data);
+           
+            const allTodos = fs.readFileSync(filepath, {encoding: "utf-8"})
+            const parseAllTodos = JSON.parse(allTodos);
+
+            const todoIndex = parseAllTodos.findIndex((todo) => todo.title === title)
+            parseAllTodos[todoIndex].body = body ;
+            
+
+         
+            fs.writeFileSync(filepath, JSON.stringify(parseAllTodos, null, 2), {encoding: "utf-8"})
+
+        res.end(JSON.stringify({title, body, createdAt: parseAllTodos[todoIndex].createdAt}, null, 2)) 
+
+        })
+            
+
+    } 
     
+else if (pathName === "/todos/delete-todo" && req.method === "DELETE") {
+    const title = url.searchParams.get("title");
+
+    if (!title) {
+        res.writeHead(400, { "Content-Type": "application/json" });
+        return res.end(JSON.stringify({ error: "Title query parameter is required" }));
+    }
+
+    const allTodos = fs.readFileSync(filepath, { encoding: "utf-8" });
+    const parseAllTodos = JSON.parse(allTodos);
+
+    const filteredTodos = parseAllTodos.filter((todo) => todo.title !== title);
+
+    if (filteredTodos.length === parseAllTodos.length) {
+        res.writeHead(404, { "Content-Type": "application/json" });
+        return res.end(JSON.stringify({ error: "Todo not found" }));
+    }
+
+    fs.writeFileSync(filepath, JSON.stringify(filteredTodos, null, 2), { encoding: "utf-8" });
+
+    res.writeHead(200, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({ message: `Todo with title '${title}' deleted successfully` }));
+}
+
     
+
     else{
         res.end("Route Not found !")
     }
