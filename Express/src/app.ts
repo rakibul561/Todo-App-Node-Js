@@ -1,5 +1,10 @@
 import express, { Application, Request, Response } from 'express'
 const app:Application = express()
+import fs from 'fs';
+import path from 'path'
+const filepath = path.join(__dirname ,"../express/db/todo.json");
+
+
  
 // get new todos
 app.get('/', (req:Request, res: Response) => {
@@ -7,7 +12,10 @@ app.get('/', (req:Request, res: Response) => {
 })
 // get all todos
 app.get('/todos', (req:Request, res: Response) => {
-  res.send('Hello World!')
+
+    const data = fs.readFileSync(filepath, {encoding: 'utf-8'})
+       
+  res.send(data)
 })
 app.post('/todos/create-todo', (req:Request, res: Response) => {
   res.send('Hello World!')

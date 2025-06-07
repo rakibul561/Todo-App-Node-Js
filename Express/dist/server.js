@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const app_1 = __importDefault(require("./app"));
 let server;
 const port = 5000;
+/* create a bootsrap */
 const bootstrap = () => __awaiter(void 0, void 0, void 0, function* () {
     server = app_1.default.listen(port, () => {
         console.log(`Example app listening on port ${port}`);
