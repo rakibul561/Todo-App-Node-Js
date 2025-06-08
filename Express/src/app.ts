@@ -14,10 +14,12 @@ app.get('/', (req:Request, res: Response) => {
   res.send('wellcome to  Todos App  f!!!')
 })
 // get all todos
-app.get('/todos', (req:Request, res: Response) => {
-
+app.get('/todos/:title', (req:Request, res: Response) => {
+     console.log("from querys",req.query);
+     console.log("from params",req.params);
+     
     const data = fs.readFileSync(filepath, {encoding: 'utf-8'});
-    console.log(data);
+    // console.log(data);
     
        
   res.json(data)
