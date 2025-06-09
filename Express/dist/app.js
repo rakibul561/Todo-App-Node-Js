@@ -8,13 +8,23 @@ const app = (0, express_1.default)();
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
 app.use(express_1.default.json());
+const todoRouter = express_1.default.Router();
+app.use('/todos', todoRouter);
+todoRouter.get('/todos', (req, res) => {
+    const data = fs_1.default.readFileSync(filepath, { encoding: 'utf-8' });
+    console.log("From todos Router");
+    res.json({
+        message: "From todos router",
+        data
+    });
+});
 const filepath = path_1.default.join(__dirname, "../db/todo.json");
 // get new todos
 app.get('/', (req, res) => {
     res.send('wellcome to  Todos App  f!!!');
 });
 // get all todos
-app.get('/todos/:title', (req, res) => {
+app.get('/todos', (req, res) => {
     console.log("from querys", req.query);
     console.log("from params", req.params);
     const data = fs_1.default.readFileSync(filepath, { encoding: 'utf-8' });
