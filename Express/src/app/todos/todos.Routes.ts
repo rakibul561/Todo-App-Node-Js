@@ -4,8 +4,8 @@ const app:Application = express()
 import fs from 'fs';
 import path, { join } from 'path'
 import { client } from '../../config/mongodb';
+import { ObjectId } from 'mongodb';
 
-const filepath = path.join(__dirname ,"../../../db/todo.json");
 
 
 
@@ -29,9 +29,7 @@ todoRouter.get('/', async (req:Request, res:Response) =>{
 todoRouter.post('/create-todo',async (req:Request, res: Response) => {
 
   const {title,priority, description} = req.body ;
-
-
-    const db = await client.db("todosDB")
+   const db = await client.db("todosDB")
     const collection = await db.collection('todos')
   await collection.insertOne({
   title: title,
@@ -41,38 +39,48 @@ todoRouter.post('/create-todo',async (req:Request, res: Response) => {
 })
 
  const cursor =  collection.find({})
- const todos = await cursor.toArray();
-
-
-  
-
-
-  
+ const todos = await cursor.toArray();  
   res.send(todos)
 })
 
 
 
-todoRouter.get('/:title', (req:Request, res: Response) => {
-  const {title, body} = req.body ;
-  console.log(title, body);
+todoRouter.get('/:id',async (req:Request, res: Response) => {
+  const id = req.params.id;
+   const db = await client.db("todosDB")
+  const collection = await db.collection('todos')
+  const todo = await collection.findOne({_id: new ObjectId(id)})
   
-  res.send('Hello World!')
+  res.json(todo)
 }) 
 
 
-todoRouter.put('/update-todo/:title', (req:Request, res: Response) => {
-  const {title, body} = req.body ;
-  console.log(title, body);
-  
-  res.send('Hello World!')
+todoRouter.put('/update-todo/:id', async (req:Request, res: Response) => {
+const id = req.params.id;
+   const db = await client.db("todosDB")
+  const collection = await db.collection('todos')
+  const {title,priority, description, isCompleted} = req.body ;
+  const filter = {_id: new ObjectId(id)};
+  const updatedTodo = await collection.updateOne(
+    filter, {$set: {title,priority,description,isCompleted }},
+    {upsert: true}
+  )
+
+
+
+  res.json(updatedTodo)
 }) 
 
 
-todoRouter.delete('/delete-todo/:title', (req:Request, res: Response) => {
-  const {title, body} = req.body ;
-  console.log(title, body);
+todoRouter.delete('/delete-todo/:id', async (req:Request, res: Response) => {
+   const id = req.params.id;
+   const db = await client.db("todosDB")
+  const collection = await db.collection('todos')
+  const data = await collection.deleteOne({_id: new ObjectId(id)})
+  console.log(data);
   
-  res.send('Hello World!')
+  
+  
+  res.json(data)
 }) 
 
