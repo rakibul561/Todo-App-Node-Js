@@ -12,7 +12,8 @@ import { ObjectId } from 'mongodb';
  export const todoRouter = express.Router();
 
 
-
+  
+//  todos get route 
 todoRouter.get('/', async (req:Request, res:Response) =>{
     
     const db = await client.db("todosDB")
@@ -25,7 +26,7 @@ todoRouter.get('/', async (req:Request, res:Response) =>{
 } )
 
 
-
+  // todos post route
 todoRouter.post('/create-todo',async (req:Request, res: Response) => {
 
   const {title,priority, description} = req.body ;
@@ -44,7 +45,7 @@ todoRouter.post('/create-todo',async (req:Request, res: Response) => {
 })
 
 
-
+//  single todo get route 
 todoRouter.get('/:id',async (req:Request, res: Response) => {
   const id = req.params.id;
    const db = await client.db("todosDB")
@@ -54,7 +55,7 @@ todoRouter.get('/:id',async (req:Request, res: Response) => {
   res.json(todo)
 }) 
 
-
+//  single todo updated
 todoRouter.put('/update-todo/:id', async (req:Request, res: Response) => {
 const id = req.params.id;
    const db = await client.db("todosDB")
@@ -71,6 +72,8 @@ const id = req.params.id;
   res.json(updatedTodo)
 }) 
 
+
+//  single todo deleted
 
 todoRouter.delete('/delete-todo/:id', async (req:Request, res: Response) => {
    const id = req.params.id;
