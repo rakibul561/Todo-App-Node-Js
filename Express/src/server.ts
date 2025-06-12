@@ -6,7 +6,6 @@ import { client } from "./config/mongodb";
 const port = 5000
 
 
-
   /* create a bootsrap */
  const bootstrap = async () =>{
    await client.connect();

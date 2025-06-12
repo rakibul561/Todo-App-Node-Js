@@ -19,7 +19,7 @@ app.get('/',
   },
   (req: Request, res: Response, next: NextFunction) => {
     try {
-      console.log(something);
+      // console.log(something);
       res.send('welcome to Todos App!');
     } catch (error) {
       next(error);
@@ -31,7 +31,7 @@ app.get('/',
 app.get('/error',
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      console.log(something);
+      // console.log(something);
       res.send('welcome to error er duniya!!!');
     } catch (error) {
       next(error);
